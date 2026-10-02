@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Party-Playlist</title>
+  <meta name="theme-color" content="#0b0b33">
+  <link rel="icon" href="https://ringko.tv/logo.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="player-body">
+  <section id="start-screen" class="start-screen">
+    <img src="https://ringko.tv/logo.png" alt="Ringko">
+    <h1>Party-Playlist</h1>
+    <p class="muted">Gästewünsche laufen zuerst, sonst zufällige Songs aus deiner Playlist.</p>
+    <button id="start-btn" class="btn btn-big" type="button">▶ Party starten</button>
+    <p id="start-error" class="message error" role="alert"></p>
+  </section>
+
+  <main id="party" class="party hidden">
+    <section class="stage">
+      <div class="player-frame"><div id="player"></div></div>
+
+      <div class="now card">
+        <div class="now-label muted">Jetzt läuft</div>
+        <div id="now-title" class="now-title">…</div>
+        <div id="now-wish" class="now-wish hidden"></div>
+      </div>
+
+      <div class="controls">
+        <button id="play-btn" class="btn btn-ctrl" type="button">⏸ Pause</button>
+        <button id="skip-btn" class="btn btn-ctrl" type="button">⏭ Überspringen</button>
+        <button id="fullscreen-btn" class="btn btn-ctrl btn-ghost" type="button">⛶ Vollbild</button>
+      </div>
+      <p id="status" class="message error hidden" role="status"></p>
+    </section>
+
+    <aside class="sidebar">
+      <section class="card queue">
+        <h2>Warteschlange</h2>
+        <p id="queue-empty" class="muted">Keine Wünsche – zufällige Songs aus der Playlist</p>
+        <ol id="queue-list" class="queue-list"></ol>
+      </section>
+
+      <section class="card qr-card">
+        <div id="qr" class="qr"></div>
+        <div>
+          <strong>Song wünschen?</strong>
+          <div class="muted">Scan mich!</div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer">made by <a href="https://ringko.tv" target="_blank" rel="noopener">ringko.tv</a></footer>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script type="module" src="js/player.js"></script>
+</body>
+</html>
