@@ -44,7 +44,7 @@ An ringko.tv angelehnt:
 | `--accent` | `#4a4aff` |
 
 Schrift `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`; abgerundete Karten
-(12–14px). Logo von ringko.tv auf der Wunschseite (als lokale Kopie im Repo).
+(12–14px). Logo von ringko.tv auf der Wunschseite (eingebunden per URL `https://ringko.tv/logo.png`).
 Footer auf beiden Seiten: dezenter Link „made by ringko.tv“ → https://ringko.tv.
 Oberflächentexte auf Deutsch.
 
@@ -140,8 +140,8 @@ js/youtube.js       Link-Erkennung / Video-ID-Extraktion (rein, testbar)
 js/queue.js         Logik „Wunsch vor Playlist“, Mischen (rein, testbar)
 js/wish.js          Wunschseiten-UI
 js/player.js        Abspielseiten-UI, IFrame-API
-img/logo.png        Logo (Kopie von ringko.tv)
-apps-script/Code.gs Backend-Code zum Einfügen in Apps Script
+apps-script/Code.gs  Web-App (doGet/doPost, Sheet, YouTube) zum Einfügen in Apps Script
+apps-script/Logik.gs reine Logik (Validierung, Warteschlange), mit Node getestet
 tests/              automatische Tests
 ```
 
