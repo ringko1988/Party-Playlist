@@ -33,9 +33,18 @@ function doPost(e) {
 function suche_(q) {
   var query = bereinigeSuche(q);
   if (!query) throw nutzerFehler_('Bitte gib einen Suchbegriff ein');
-  var res = YouTube.Search.list('snippet', {
-    q: query, type: 'video', videoEmbeddable: 'true', maxResults: 5,
-  });
+  var res;
+  try {
+    res = YouTube.Search.list('snippet', {
+      q: query, type: 'video', videoEmbeddable: 'true', maxResults: 5,
+    });
+  } catch (err) {
+    // Tageskontingent ca. 100 Suchen; Links funktionieren weiterhin (kosten kaum Kontingent)
+    if (/quota/i.test(err.message)) {
+      throw nutzerFehler_('Die Suche ist für heute aufgebraucht – füg stattdessen einen YouTube-Link ein.');
+    }
+    throw err;
+  }
   return (res.items || []).map(function (item) {
     return videoDaten_(item.id.videoId, item.snippet);
   });

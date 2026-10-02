@@ -148,3 +148,13 @@ test('IDs, Titel und Namen mit = + - @ landen als Text im Sheet', () => {
   assert.deepEqual(datenzeilen()[0].slice(1), [MINUS, '=Hit', '-_-', 'offen']);
   assert.deepEqual(post({ action: 'naechster' }).data, { videoId: MINUS, titel: '=Hit', name: '-_-' });
 });
+
+test('aufgebrauchtes YouTube-Kontingent ergibt verständliche Meldung', () => {
+  const f = fakes();
+  f.globals.YouTube.Search.list = () => {
+    throw new Error('API call to youtube.search.list failed with error: The request cannot be completed because you have exceeded your quota.');
+  };
+  const app = loadGs(['apps-script/Logik.gs', 'apps-script/Code.gs'], f.globals);
+  const r = JSON.parse(app.doGet({ parameter: { action: 'suche', q: 'queen' } }));
+  assert.deepEqual(r, { ok: false, fehler: 'Die Suche ist für heute aufgebraucht – füg stattdessen einen YouTube-Link ein.' });
+});
