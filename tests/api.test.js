@@ -45,3 +45,13 @@ test('Netzwerkfehler und kaputtes JSON werden zu Verbindungs-Fehler', async () =
   const kaputt = createApi(BASE, fakeFetch(() => { throw new SyntaxError('bad json'); }).fn);
   await assert.rejects(kaputt.naechster(), (e) => e instanceof ApiError && e.message === text);
 });
+
+test('hängende Anfrage bricht nach Timeout mit Verbindungs-Fehler ab', async () => {
+  const haengt = (_url, opts = {}) => new Promise((_resolve, reject) => {
+    opts.signal?.addEventListener('abort', () => reject(opts.signal.reason));
+  });
+  const api = createApi(BASE, haengt, { timeoutMs: 50 });
+  const start = Date.now();
+  await assert.rejects(api.naechster(), (e) => e instanceof ApiError && e.message.startsWith('Gerade keine Verbindung'));
+  assert.ok(Date.now() - start < 1000);
+});

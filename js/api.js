@@ -4,7 +4,8 @@ const VERBINDUNGSFEHLER = "Gerade keine Verbindung – versuch's gleich nochmal"
 
 export class ApiError extends Error {}
 
-export function createApi(baseUrl, fetchFn = globalThis.fetch.bind(globalThis)) {
+// Ohne Timeout könnte eine hängende Anfrage (wackeliges WLAN) die Musik blockieren
+export function createApi(baseUrl, fetchFn = globalThis.fetch.bind(globalThis), { timeoutMs = 10000 } = {}) {
   async function auswerten(anfrage) {
     let antwort;
     try {
@@ -17,7 +18,9 @@ export function createApi(baseUrl, fetchFn = globalThis.fetch.bind(globalThis)) 
   }
 
   const get = (action, params = {}) =>
-    auswerten(() => fetchFn(`${baseUrl}?${new URLSearchParams({ action, ...params })}`));
+    auswerten(() => fetchFn(`${baseUrl}?${new URLSearchParams({ action, ...params })}`, {
+      signal: AbortSignal.timeout(timeoutMs),
+    }));
 
   // text/plain vermeidet den CORS-Preflight, den Apps Script nicht beantwortet
   const post = (action, daten = {}) =>
@@ -25,6 +28,7 @@ export function createApi(baseUrl, fetchFn = globalThis.fetch.bind(globalThis)) 
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action, ...daten }),
+      signal: AbortSignal.timeout(timeoutMs),
     }));
 
   return {
