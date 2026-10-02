@@ -39,3 +39,12 @@ test('letzteZeileMitStatus', () => {
   assert.equal(L.letzteZeileMitStatus(rows, 'aaaaaaaaaaa', 'gespielt'), 2);
   assert.equal(L.letzteZeileMitStatus(rows, 'bbbbbbbbbbb', 'gespielt'), 0);
 });
+
+test('alsZelltext verhindert Formel-Interpretation im Sheet', () => {
+  assert.equal(L.alsZelltext('-tJYN-eG1zk'), "'-tJYN-eG1zk");
+  assert.equal(L.alsZelltext('=IMPORTDATA("x")'), `'=IMPORTDATA("x")`);
+  assert.equal(L.alsZelltext('+1'), "'+1");
+  assert.equal(L.alsZelltext('@lisa'), "'@lisa");
+  assert.equal(L.alsZelltext('Lisa'), 'Lisa');
+  assert.equal(L.alsZelltext(''), '');
+});

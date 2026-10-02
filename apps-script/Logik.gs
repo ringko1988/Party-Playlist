@@ -56,3 +56,10 @@ function letzteZeileMitStatus(rows, videoId, status) {
   }
   return 0;
 }
+
+// Google Sheets liest Werte, die mit = + - @ beginnen, als Formel.
+// Ein vorangestelltes ' speichert sie als reinen Text (das ' selbst wird nicht gespeichert).
+function alsZelltext(wert) {
+  var text = String(wert == null ? '' : wert);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}

@@ -10,11 +10,24 @@ function fakes({ videos = {} } = {}) {
   const sheets = {};
   const makeSheet = () => {
     const data = [];
+    const formulas = [];
+    // Wie Google Sheets: führendes ' markiert Text und wird nicht gespeichert;
+    // ungeschützte Werte mit = + - @ würden als Formel gelesen
+    const zelle = (v) => {
+      if (typeof v !== 'string') return v;
+      if (v.startsWith("'")) return v.slice(1);
+      if (/^[=+\-@]/.test(v)) { formulas.push(v); return '#ERROR!'; }
+      return v;
+    };
     return {
       data,
-      appendRow: (row) => data.push([...row]),
+      formulas,
+      appendRow: (row) => data.push(row.map(zelle)),
       getDataRange: () => ({ getValues: () => data.map((r) => [...r]) }),
-      getRange: (r, c) => ({ setValue: (v) => { data[r - 1][c - 1] = v; } }),
+      getRange: (r, c) => ({
+        setValue: (v) => { data[r - 1][c - 1] = zelle(v); },
+        setNumberFormat: () => {},
+      }),
       setFrozenRows: () => {},
     };
   };
@@ -55,7 +68,7 @@ function setup(videos = { [ID1]: { titel: 'Song Eins' }, [ID2]: { titel: 'Song Z
   const post = (body) => JSON.parse(app.doPost({ postData: { contents: JSON.stringify(body) } }));
   const get = (parameter) => JSON.parse(app.doGet({ parameter }));
   const datenzeilen = () => f.sheets.Wuensche.data.slice(1);
-  return { post, get, datenzeilen };
+  return { post, get, datenzeilen, sheets: f.sheets };
 }
 
 test('wuenschen legt Zeile an; gleicher offener Wunsch wird nicht doppelt angelegt', () => {
@@ -124,4 +137,14 @@ test('suche liefert Treffer mit dekodierten Titeln', () => {
 test('unbekannte Aktion', () => {
   const { get } = setup();
   assert.deepEqual(get({ action: 'quatsch' }), { ok: false, fehler: 'Unbekannte Aktion' });
+});
+
+test('IDs, Titel und Namen mit = + - @ landen als Text im Sheet', () => {
+  const MINUS = '-tJYN-eG1zk';
+  const { post, datenzeilen, sheets } = setup({ [MINUS]: { titel: '=Hit' } });
+  assert.deepEqual(post({ action: 'wuenschen', videoId: MINUS, name: '-_-' }).data, { platz: 1, duplikat: false });
+  assert.deepEqual(post({ action: 'wuenschen', videoId: MINUS, name: '' }).data, { platz: 1, duplikat: true });
+  assert.deepEqual(sheets.Wuensche.formulas, []);
+  assert.deepEqual(datenzeilen()[0].slice(1), [MINUS, '=Hit', '-_-', 'offen']);
+  assert.deepEqual(post({ action: 'naechster' }).data, { videoId: MINUS, titel: '=Hit', name: '-_-' });
 });

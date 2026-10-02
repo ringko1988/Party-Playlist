@@ -64,7 +64,7 @@ function wuenschen_(videoId, name) {
   return mitLock_(function () {
     var platz = platzVon(zeilen_(), videoId);
     if (platz > 0) return { platz: platz, duplikat: true };
-    blatt_().appendRow([new Date(), videoId, video.titel, gastName, 'offen']);
+    blatt_().appendRow([new Date(), alsZelltext(videoId), alsZelltext(video.titel), alsZelltext(gastName), 'offen']);
     return { platz: platzVon(zeilen_(), videoId), duplikat: false };
   });
 }
@@ -117,6 +117,7 @@ function blatt_() {
     blatt = ss.insertSheet(BLATT_NAME);
     blatt.appendRow(KOPFZEILE);
     blatt.setFrozenRows(1);
+    blatt.getRange('B:D').setNumberFormat('@'); // VideoId, Titel, Name immer als Text
   }
   return blatt;
 }
