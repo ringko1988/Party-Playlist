@@ -151,7 +151,7 @@ tests/              automatische Tests
   Video-ID-Extraktion aus allen Link-Varianten, Erkennung Link vs. Text, Mischen,
   Auswahl nächster Song (Wunsch vor Playlist, Neumischen am Listenende).
 - Apps-Script-Logik (Duplikat, Platzberechnung, `naechster`) als reine Funktionen in
-  `Code.gs` gekapselt und ebenfalls mit Node getestet.
+  `Logik.gs` gekapselt und ebenfalls mit Node getestet.
 - Abschließend gemeinsamer End-to-End-Test im Browser nach der Einrichtung.
 
 ## Einrichtung
