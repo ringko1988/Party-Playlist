@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Song wünschen</title>
+  <meta name="theme-color" content="#0b0b33">
+  <link rel="icon" href="https://ringko.tv/logo.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="wish-page">
+    <header class="wish-header">
+      <img src="https://ringko.tv/logo.png" alt="Ringko">
+      <h1>Wünsch dir einen Song</h1>
+      <p class="muted">YouTube-Link einfügen oder Titel und Interpret eintippen.</p>
+    </header>
+
+    <section class="card">
+      <form id="wish-form" class="wish-form" autocomplete="off">
+        <div>
+          <label class="label" for="query">Song</label>
+          <div class="search-row">
+            <input id="query" class="input" type="text" enterkeyhint="search"
+                   placeholder="YouTube-Link oder Titel und Interpret">
+            <button id="search-btn" class="btn" type="submit">Los</button>
+          </div>
+        </div>
+        <div>
+          <label class="label" for="name">Dein Name (optional)</label>
+          <input id="name" class="input" type="text" maxlength="30" placeholder="z. B. Lisa">
+        </div>
+      </form>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <div id="results" class="results"></div>
+    </section>
+
+    <section class="upcoming card">
+      <h2>Als Nächstes</h2>
+      <p id="upcoming-empty" class="muted">Noch keine Wünsche – sei die/der Erste!</p>
+      <ol id="upcoming-list"></ol>
+    </section>
+  </main>
+
+  <footer class="footer">made by <a href="https://ringko.tv" target="_blank" rel="noopener">ringko.tv</a></footer>
+
+  <script type="module" src="js/wish.js"></script>
+</body>
+</html>
